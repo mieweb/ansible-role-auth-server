@@ -1,0 +1,10 @@
+---
+# defaults/main.yml
+# You can override these in your playbook or inventory
+node_version: "v20.18.0"
+root_url: "http://mie-fwdc-auth-test.med-web.com"
+bind_ip: "127.0.0.1"
+port: 3000
+mongo_url: "mongodb://localhost:27017/mieweb_auth_app"
+ssl_cert: "/etc/ssl/nginx/med-webwc.crt"
+ssl_key: "/etc/ssl/nginx/med-webwc.key"

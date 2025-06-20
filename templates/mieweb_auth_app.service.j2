@@ -1,0 +1,22 @@
+[Unit]
+Description=MIEWEB Auth App
+Documentation=https://github.com/abroa01/mieweb_auth_app
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+Type=exec
+User={{ service_user }}
+Group={{ service_group }}
+RemoveIPC=true
+PrivateTmp=true
+NoNewPrivileges=true
+RestrictSUIDSGID=true
+ProtectSystem=strict
+ProtectHome=read-only
+EnvironmentFile=/etc/default/mieweb_auth_app
+WorkingDirectory={{ meteor_app_dir }}/bundle
+ExecStart=/opt/{{ node_dist }}/bin/node main.js
+
+[Install]
+WantedBy=multi-user.target

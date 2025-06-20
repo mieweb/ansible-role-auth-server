@@ -1,0 +1,17 @@
+---
+# vars/main.yml
+node_version: "v20.18.0"
+node_dist: "node-{{ node_version }}-linux-x64"
+node_url: "https://nodejs.org/dist/{{ node_version }}/{{ node_dist }}.tar.xz"
+meteor_app_url: "https://github.com/mieweb/mieweb_auth_app/releases/latest/download/meteor-server.tar.gz"
+meteor_app_dir: "/opt/mieweb_auth_app"
+service_user: "mieweb_auth_app"
+service_group: "mieweb_auth_app"
+firebase_service_account_json: "{{ lookup('env', 'FIREBASE_SERVICE_ACCOUNT_JSON') }}"
+root_url: "http://mie-fwdc-auth-test.med-web.com"
+bind_ip: "127.0.0.1"
+port: 3000
+mongo_url: "mongodb://localhost:27017/mieweb_auth_app"
+ssl_cert: "/etc/ssl/nginx/med-webwc.crt"
+ssl_key: "/etc/ssl/nginx/med-webwc.key"
+cloudflared_token: "{{ lookup('env', 'CLOUDFLARED_TOKEN') }}"

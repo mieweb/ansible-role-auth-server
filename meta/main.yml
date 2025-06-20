@@ -1,0 +1,4 @@
+---
+# meta/main.yml
+# Minimal meta file for the role
+depends: []
