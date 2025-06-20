@@ -1,22 +1,22 @@
----
-# README.md
 # Ansible Role: mieweb_auth_app
 
-This role installs and configures the MIEWEB Auth App, including Node.js, MongoDB, NGINX, and Cloudflared.
+This role installs and configures the MIEWEB Auth App, including Node.js, NGINX, and Cloudflared.
 
 ## Role Variables
 
-- `node_version`: Node.js version (default: v20.18.0)
-- `root_url`: Application root URL
-- `bind_ip`: Bind IP for the app
-- `port`: App port
-- `mongo_url`: MongoDB connection string
-- `ssl_cert`: Path to SSL certificate for NGINX
-- `ssl_key`: Path to SSL key for NGINX
-- `firebase_service_account_json`: Firebase service account JSON (should be provided securely)
-- `cloudflared_token`: Cloudflared service token (should be provided securely)
+| Variable                        | Default                                      | Description                                      |
+|---------------------------------|----------------------------------------------|--------------------------------------------------|
+| `node_version`                  | `v20.18.0`                                   | Node.js version                                  |
+| `root_url`                      | `http://mie-fwdc-auth-test.med-web.com`      | Application root URL                             |
+| `bind_ip`                       | `127.0.0.1`                                  | Bind IP for the app                              |
+| `port`                          | `3000`                                       | App port                                         |
+| `mongo_url`                     | `mongodb://localhost:27017/mieweb_auth_app`  | MongoDB connection string                        |
+| `ssl_cert`                      | `/etc/ssl/nginx/med-webwc.crt`               | Path to SSL certificate for NGINX                |
+| `ssl_key`                       | `/etc/ssl/nginx/med-webwc.key`               | Path to SSL key for NGINX                        |
+| `firebase_service_account_json` | *(none)*                                     | Firebase service account JSON (provide securely)  |
+| `cloudflared_token`             | *(none)*                                     | Cloudflared service token (provide securely)      |
 
-## Usage
+## Example Playbook
 
 ```yaml
 - hosts: all
