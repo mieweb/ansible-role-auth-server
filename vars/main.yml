@@ -7,9 +7,5 @@ meteor_app_url: "https://github.com/mieweb/mieweb_auth_app/releases/latest/downl
 meteor_app_dir: "/opt/mieweb_auth_app"
 service_user: "mieweb_auth_app"
 service_group: "mieweb_auth_app"
-root_url: "http://mie-fwdc-auth-test.med-web.com"
 bind_ip: "127.0.0.1"
 port: 3000
-mongo_url: "mongodb://localhost:27017/mieweb_auth_app"
-ssl_cert: "/etc/ssl/nginx/med-webwc.crt"
-ssl_key: "/etc/ssl/nginx/med-webwc.key"
