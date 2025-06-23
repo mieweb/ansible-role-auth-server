@@ -55,7 +55,7 @@
 
 - name: Install Meteor app dependencies
   shell: |
-    PATH=/opt/{{ node_dist }}:$PATH /opt/{{ node_dist }}/bin/npm install
+    PATH=/opt/{{ node_dist }}/bin:$PATH /opt/{{ node_dist }}/bin/npm install
   args:
     chdir: "{{ meteor_app_dir }}/bundle/programs/server"
 
