@@ -1,0 +1,25 @@
+---
+# tasks/nodejs.yml
+- name: Install dependencies
+  apt:
+    name:
+      - wget
+      - curl
+      - gnupg
+      - ca-certificates
+      - sudo
+    state: present
+    update_cache: yes
+
+- name: Download Node.js
+  get_url:
+    url: "{{ node_url }}"
+    dest: "/tmp/{{ node_dist }}.tar.xz"
+    mode: '0644'
+
+- name: Extract Node.js to /opt
+  unarchive:
+    src: "/tmp/{{ node_dist }}.tar.xz"
+    dest: /opt
+    remote_src: yes
+    creates: "/opt/{{ node_dist }}"

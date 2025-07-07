@@ -1,0 +1,34 @@
+---
+# tasks/cloudflared.yml
+- name: Ensure /etc/hosts has entry for app host
+  lineinfile:
+    path: /etc/hosts
+    line: "127.0.0.1 {{ root_url | regex_replace('^https?://([^/:]+).*', '\\1') }}"
+    state: present
+    regexp: "^127.0.0.1[ \t]+{{ root_url | regex_replace('^https?://([^/:]+).*', '\\1') }}$"
+    insertafter: EOF
+
+- name: Add Cloudflare GPG key
+  shell: |
+    mkdir -p --mode=0755 /usr/share/keyrings
+    curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+  args:
+    creates: /usr/share/keyrings/cloudflare-main.gpg
+
+- name: Add cloudflared repo
+  copy:
+    dest: /etc/apt/sources.list.d/cloudflared.list
+    content: "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main\n"
+    mode: '0644'
+
+- name: Install cloudflared
+  apt:
+    name: cloudflared
+    state: present
+    update_cache: yes
+
+- name: Install cloudflared service
+  shell: cloudflared service install {{ cloudflared_token }}
+  args:
+    creates: /etc/systemd/system/cloudflared.service
+  when: cloudflared_token is defined and cloudflared_token != ""

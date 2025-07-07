@@ -1,0 +1,66 @@
+---
+# tasks/meteor_app.yml
+- name: Download Meteor app
+  get_url:
+    url: "{{ meteor_app_url }}"
+    dest: /tmp/meteor-server.tar.gz
+    mode: '0644'
+
+- name: Create app directory
+  file:
+    path: "{{ meteor_app_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Extract Meteor app
+  unarchive:
+    src: /tmp/meteor-server.tar.gz
+    dest: "{{ meteor_app_dir }}"
+    remote_src: yes
+
+- name: Create system user for app
+  user:
+    name: "{{ service_user }}"
+    system: yes
+    shell: /usr/sbin/nologin
+    group: "{{ service_group }}"
+    home: "{{ meteor_app_dir }}"
+    create_home: no
+
+- name: Install Meteor app dependencies
+  shell: |
+    PATH=/opt/{{ node_dist }}/bin:$PATH /opt/{{ node_dist }}/bin/npm install
+  args:
+    chdir: "{{ meteor_app_dir }}/bundle/programs/server"
+
+- name: Set ownership of app directory
+  file:
+    path: "{{ meteor_app_dir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+
+- name: Create environment file
+  template:
+    src: mieweb_auth_app.env.j2
+    dest: /etc/default/mieweb_auth_app
+    mode: '0600'
+
+- name: Create systemd service file
+  template:
+    src: mieweb_auth_app.service.j2
+    dest: /etc/systemd/system/mieweb_auth_app.service
+    mode: '0644'
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start mieweb_auth_app service
+  systemd:
+    name: mieweb_auth_app
+    enabled: yes
+    state: started

@@ -1,0 +1,55 @@
+---
+# tasks/nginx.yml
+- name: Install NGINX
+  apt:
+    name: nginx
+    state: present
+
+- name: Remove default NGINX site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Create SSL directory
+  file:
+    path: /etc/ssl/nginx
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0700'
+
+- name: Write SSL certificate from variable if defined
+  copy:
+    content: "{{ ssl_cert_pem | default(omit) }}"
+    dest: "{{ ssl_cert }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: ssl_cert_pem is defined
+
+- name: Write SSL key from variable if defined
+  copy:
+    content: "{{ ssl_key_pem | default(omit) }}"
+    dest: "{{ ssl_key }}"
+    owner: root
+    group: root
+    mode: '0600'
+  when: ssl_key_pem is defined
+
+- name: Create NGINX site config
+  template:
+    src: mieweb_auth_app.conf.j2
+    dest: /etc/nginx/sites-available/mieweb_auth_app.conf
+    mode: '0644'
+
+- name: Enable NGINX site
+  file:
+    src: /etc/nginx/sites-available/mieweb_auth_app.conf
+    dest: /etc/nginx/sites-enabled/mieweb_auth_app.conf
+    state: link
+    force: yes
+
+- name: Restart NGINX
+  systemd:
+    name: nginx
+    state: restarted
