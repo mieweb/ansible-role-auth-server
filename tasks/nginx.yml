@@ -1,17 +1,17 @@
 ---
 # tasks/nginx.yml
 - name: Install NGINX
-  apt:
+  ansible.builtin.apt:
     name: nginx
     state: present
 
 - name: Remove default NGINX site
-  file:
+  ansible.builtin.file:
     path: /etc/nginx/sites-enabled/default
     state: absent
 
 - name: Create SSL directory
-  file:
+  ansible.builtin.file:
     path: /etc/ssl/nginx
     state: directory
     owner: www-data
@@ -19,7 +19,7 @@
     mode: '0700'
 
 - name: Write SSL certificate from variable if defined
-  copy:
+  ansible.builtin.copy:
     content: "{{ ssl_cert_pem | default(omit) }}"
     dest: "{{ ssl_cert }}"
     owner: root
@@ -28,7 +28,7 @@
   when: ssl_cert_pem is defined
 
 - name: Write SSL key from variable if defined
-  copy:
+  ansible.builtin.copy:
     content: "{{ ssl_key_pem | default(omit) }}"
     dest: "{{ ssl_key }}"
     owner: root
@@ -37,19 +37,19 @@
   when: ssl_key_pem is defined
 
 - name: Create NGINX site config
-  template:
+  ansible.builtin.template:
     src: mieweb_auth_app.conf.j2
     dest: /etc/nginx/sites-available/mieweb_auth_app.conf
     mode: '0644'
 
 - name: Enable NGINX site
-  file:
+  ansible.builtin.file:
     src: /etc/nginx/sites-available/mieweb_auth_app.conf
     dest: /etc/nginx/sites-enabled/mieweb_auth_app.conf
     state: link
-    force: yes
+    force: true
 
 - name: Restart NGINX
-  systemd:
+  ansible.builtin.systemd:
     name: nginx
     state: restarted

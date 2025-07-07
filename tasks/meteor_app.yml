@@ -1,13 +1,13 @@
 ---
 # tasks/meteor_app.yml
 - name: Download Meteor app
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ meteor_app_url }}"
     dest: /tmp/meteor-server.tar.gz
     mode: '0644'
 
 - name: Create app directory
-  file:
+  ansible.builtin.file:
     path: "{{ meteor_app_dir }}"
     state: directory
     owner: root
@@ -15,57 +15,58 @@
     mode: '0755'
 
 - name: Extract Meteor app
-  unarchive:
+  ansible.builtin.unarchive:
     src: /tmp/meteor-server.tar.gz
     dest: "{{ meteor_app_dir }}"
-    remote_src: yes
+    remote_src: true
 
 - name: Create system group for app
-  group:
+  ansible.builtin.group:
     name: "{{ service_group }}"
-    system: yes
+    system: true
 
 - name: Create system user for app
-  user:
+  ansible.builtin.user:
     name: "{{ service_user }}"
-    system: yes
+    system: true
     shell: /usr/sbin/nologin
     group: "{{ service_group }}"
     home: "{{ meteor_app_dir }}"
-    create_home: no
+    create_home: false
 
 - name: Install Meteor app dependencies
-  shell: |
+  ansible.builtin.shell: |
     PATH=/opt/{{ node_dist }}/bin:$PATH /opt/{{ node_dist }}/bin/npm install
   args:
     chdir: "{{ meteor_app_dir }}/bundle/programs/server"
+  changed_when: false
 
 - name: Set ownership of app directory
-  file:
+  ansible.builtin.file:
     path: "{{ meteor_app_dir }}"
     state: directory
-    recurse: yes
+    recurse: true
     owner: "{{ service_user }}"
     group: "{{ service_group }}"
 
 - name: Create environment file
-  template:
+  ansible.builtin.template:
     src: mieweb_auth_app.env.j2
     dest: /etc/default/mieweb_auth_app
     mode: '0600'
 
 - name: Create systemd service file
-  template:
+  ansible.builtin.template:
     src: mieweb_auth_app.service.j2
     dest: /etc/systemd/system/mieweb_auth_app.service
     mode: '0644'
 
 - name: Reload systemd
-  systemd:
-    daemon_reload: yes
+  ansible.builtin.systemd:
+    daemon_reload: true
 
 - name: Enable and start mieweb_auth_app service
-  systemd:
+  ansible.builtin.systemd:
     name: mieweb_auth_app
-    enabled: yes
+    enabled: true
     state: started

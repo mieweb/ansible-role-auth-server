@@ -1,7 +1,7 @@
 ---
 # tasks/nodejs.yml
 - name: Install dependencies
-  apt:
+  ansible.builtin.apt:
     name:
       - wget
       - curl
@@ -9,17 +9,17 @@
       - ca-certificates
       - sudo
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Download Node.js
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ node_url }}"
     dest: "/tmp/{{ node_dist }}.tar.xz"
     mode: '0644'
 
 - name: Extract Node.js to /opt
-  unarchive:
+  ansible.builtin.unarchive:
     src: "/tmp/{{ node_dist }}.tar.xz"
     dest: /opt
-    remote_src: yes
+    remote_src: true
     creates: "/opt/{{ node_dist }}"

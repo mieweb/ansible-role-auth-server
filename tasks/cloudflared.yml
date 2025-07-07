@@ -1,7 +1,7 @@
 ---
 # tasks/cloudflared.yml
 - name: Ensure /etc/hosts has entry for app host
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/hosts
     line: "127.0.0.1 {{ root_url | regex_replace('^https?://([^/:]+).*', '\\1') }}"
     state: present
@@ -9,26 +9,29 @@
     insertafter: EOF
 
 - name: Add Cloudflare GPG key
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     mkdir -p --mode=0755 /usr/share/keyrings
     curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
   args:
     creates: /usr/share/keyrings/cloudflare-main.gpg
+  changed_when: false
 
 - name: Add cloudflared repo
-  copy:
+  ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/cloudflared.list
     content: "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main\n"
     mode: '0644'
 
 - name: Install cloudflared
-  apt:
+  ansible.builtin.apt:
     name: cloudflared
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Install cloudflared service
-  shell: cloudflared service install {{ cloudflared_token }}
+  ansible.builtin.shell: cloudflared service install {{ cloudflared_token }}
   args:
     creates: /etc/systemd/system/cloudflared.service
   when: cloudflared_token is defined and cloudflared_token != ""
+  changed_when: false
