@@ -8,6 +8,6 @@ meteor_app_dir: "/opt/mieweb_auth_app"
 service_user: "mieweb_auth_app"
 service_group: "mieweb_auth_app"
 bind_ip: "127.0.0.1"
-port: 3000
+app_port: 3000
 ssl_cert: "/etc/ssl/nginx/{{ root_url | regex_replace('^https?://([^/:]+).*', '\\1') }}.crt"
 ssl_key: "/etc/ssl/nginx/{{ root_url | regex_replace('^https?://([^/:]+).*', '\\1') }}.key"

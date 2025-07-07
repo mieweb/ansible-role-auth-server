@@ -1,6 +1,10 @@
 ---
 # tasks/main.yml
-- import_tasks: nodejs.yml
-- import_tasks: meteor_app.yml
-- import_tasks: nginx.yml
-- import_tasks: cloudflared.yml
+- name: Include Node.js setup tasks
+  ansible.builtin.import_tasks: nodejs.yml
+- name: Include Meteor app setup tasks
+  ansible.builtin.import_tasks: meteor_app.yml
+- name: Include NGINX setup tasks
+  ansible.builtin.import_tasks: nginx.yml
+- name: Include Cloudflared and hosts setup tasks
+  ansible.builtin.import_tasks: cloudflared.yml

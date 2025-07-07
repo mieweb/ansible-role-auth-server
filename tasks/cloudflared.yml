@@ -30,7 +30,7 @@
     update_cache: true
 
 - name: Install cloudflared service
-  ansible.builtin.shell: cloudflared service install {{ cloudflared_token }}
+  ansible.builtin.command: cloudflared service install {{ cloudflared_token }}
   args:
     creates: /etc/systemd/system/cloudflared.service
   when: cloudflared_token is defined and cloudflared_token != ""
