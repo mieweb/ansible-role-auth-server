@@ -20,6 +20,11 @@
     dest: "{{ meteor_app_dir }}"
     remote_src: yes
 
+- name: Create system group for app
+  group:
+    name: "{{ service_group }}"
+    system: yes
+
 - name: Create system user for app
   user:
     name: "{{ service_user }}"
