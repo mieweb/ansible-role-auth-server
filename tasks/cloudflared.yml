@@ -16,9 +16,6 @@
     force: false
     owner: root
     group: root
-  args:
-    creates: /usr/share/keyrings/cloudflare-main.gpg
-  changed_when: false
 
 - name: Add cloudflared repo
   ansible.builtin.copy:
