@@ -9,10 +9,13 @@
     insertafter: EOF
 
 - name: Add Cloudflare GPG key
-  ansible.builtin.shell: |
-    set -o pipefail
-    mkdir -p --mode=0755 /usr/share/keyrings
-    curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+  ansible.builtin.get_url:
+    url: https://pkg.cloudflare.com/cloudflare-main.gpg
+    dest: /usr/share/keyrings/cloudflare-main.gpg
+    mode: '0644'
+    force: false
+    owner: root
+    group: root
   args:
     creates: /usr/share/keyrings/cloudflare-main.gpg
   changed_when: false
