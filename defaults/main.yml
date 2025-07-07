@@ -3,5 +3,5 @@
 # You can override these in your playbook or inventory
 root_url: "http://localhost"
 mongo_url: "mongodb://localhost:27017/mieweb_auth_app"
-ssl_cert: "/etc/ssl/nginx/example.crt"
-ssl_key: "/etc/ssl/nginx/example.key"
+ssl_cert_pem: "CHANGEME: PEM-encoded certificate goes here"
+ssl_key_pem: "CHANGEME: PEM-encoded private key goes here"
