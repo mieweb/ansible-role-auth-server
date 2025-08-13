@@ -1,3 +1,10 @@
+upstream app {
+  zone app 64k;
+  {% for host in nginx_upstreams %}
+  server {{ host }}:{{ app_port }};
+  {% endfor %}
+}
+
 server {
   listen 80;
   server_name _;
@@ -31,7 +38,7 @@ server {
   add_header Referrer-Policy "no-referrer-when-downgrade" always;
 
   location / {
-    proxy_pass http://localhost:3000;
+    proxy_pass http://app;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

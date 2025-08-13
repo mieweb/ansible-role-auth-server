@@ -8,3 +8,5 @@ admin_email: "admin@example.com"
 from_email: "auth@example.com"
 ssl_cert_pem: "CHANGEME: PEM-encoded certificate goes here"
 ssl_key_pem: "CHANGEME: PEM-encoded private key goes here"
+nginx_upstreams:
+  - "localhost"
